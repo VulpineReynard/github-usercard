@@ -123,5 +123,6 @@ body {
   margin: 3px 0 10px;
 }
 
-
-
+.github-input::placeholder {
+  color: white;
+}
