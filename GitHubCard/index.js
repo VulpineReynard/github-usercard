@@ -61,6 +61,7 @@ function createCard(userObj) {
   const followers = document.createElement('p');
   const following = document.createElement('p');
   const bio = document.createElement('p');
+  const repos = document.createElement('p');
 
   card.appendChild(userImg);
   card.appendChild(cardInfo);
@@ -72,8 +73,9 @@ function createCard(userObj) {
   profile.appendChild(address);
   cardInfo.appendChild(followers);
   cardInfo.appendChild(following);
+  cardInfo.appendChild(repos);
   cardInfo.appendChild(bio);
-
+  
   card.classList.add('card');
   userImg.src = userObj.data.avatar_url;
   cardInfo.classList.add('card-info');
@@ -87,6 +89,7 @@ function createCard(userObj) {
   followers.textContent = `Followers: ${userObj.data.followers}`;
   following.textContent = `Following: ${userObj.data.following}`;
   bio.textContent = `Bio: ${userObj.data.bio}`;
+  repos.textContent = `Repositories: ${userObj.data.public_repos}`;
 
 
   return card;
@@ -106,11 +109,17 @@ githubInput.classList.add('github-input');
 githubInput.placeholder = 'Enter A Github Username';
 githubInput.style.borderRadius = '5px';
 githubInput.style.padding = '10px';
-githubInput.style.boxShadow = '1px 1px 2px 1px purple';
-githubInput.style.border = '1px solid grey';
+githubInput.style.boxShadow = '1px 1px 3px 1px black';
+githubInput.style.border = '2px solid #ff99a8';
 githubInput.style.background = '#ff6d85';
 githubInput.style.color = 'white';
 githubInput.style.outline = 'none';
+githubInput.addEventListener('focus', (event) => {
+  TweenMax.to(event.target, .2, {transform: 'scale(1.1)'});
+});
+githubInput.addEventListener('blur', (event) => {
+  TweenMax.to(event.target, .2, {transform: 'scale(1.0)'});
+});
 
 // create a button to add a card of that user
 const addCardButton = document.createElement('button');
@@ -119,7 +128,7 @@ addCardButton.style.width = '60px';
 addCardButton.textContent = 'Submit';
 addCardButton.style.borderRadius = '5px';
 addCardButton.style.padding = '5px';
-addCardButton.style.boxShadow = '1px 1px 2px 1px purple';
+addCardButton.style.boxShadow = '1px 1px 3px 1px black';
 addCardButton.style.border = '1px solid grey';
 addCardButton.style.background = '#ff6d85';
 addCardButton.style.color = 'white';
@@ -138,7 +147,8 @@ const header = document.querySelector('.header');
 header.appendChild(githubInput);
 header.appendChild(addCardButton);
 const githubButton = document.querySelector('.add-card-button');
-// when we click the submit button, get the value of hte input field and use that as the username
+
+// when we click the submit button, get the value of the input field and use that as the username
 githubButton.addEventListener('click', () => {
   const githubInputValue = githubInput.value;
   addGithubCard(githubInputValue);
@@ -158,6 +168,9 @@ function addGithubCard(githubUsername) {
     cards.prepend(createCard(data));
   })
   .catch(error => {
-    console.log(error);
+    let githubInputValue = githubInput.value;
+    if(githubInputValue == '') {
+      alert('Error: Input field is empty. \n' + error);
+    }
   })
 }
